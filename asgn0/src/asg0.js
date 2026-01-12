@@ -2,7 +2,7 @@
 let canvas, ctx;
 let x_origin, y_origin;
 let x_offset = 10; // original = 120
-let y_offset = 80; // original = 10
+let y_offset = 10; // original = 10
 let rec_height = 340; //original = 150
 let rec_width = 340; // original = 150
 
