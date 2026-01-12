@@ -107,7 +107,7 @@ function handleDrawOperationEvent() {
   }
   else if (op === "Angle between") {
     let angle = angleBetween(vu1, vu2);
-    if (angle > 0) {
+    if (angle >= 0) {
       console.log("Angle: " + angle);
     }
     else {
