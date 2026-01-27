@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Change a point color</title>
+    <link rel="stylesheet" href="CSS/document.css">
+    <link rel="stylesheet" href="CSS/slideButtonStyle.css">
+    <link rel="stylesheet" href="CSS/cursor.css">
+  </head>
+
+  <body onload="main()">
+    <div class="page">
+      <canvas id="webgl" width="570" height="570">
+      Please use a browser that supports "canvas"
+      </canvas>
+      <div class="panel">
+        <p>Dominic Cabrera<br>
+          docabrer@ucsc.edu
+        </p>
+        <p>Notes to Grader: Personally stylized webpage motivated by minimalism in both shape and color,
+           executed by CSS. Other details of note: a uniquely shaped cursor whose color value matches the RGB
+           slider values and a button to delete the most recent paint stroke.
+        </p>
+        <hr class="divider">
+        <p id="numdot"> numdot: 0    ms: 0    fps: 0 </p>
+          <!--BUTTONS-->
+          <br><button type="button" class="button" id="clearButton">Clear Canvas</button>
+          <button type="button" class="button" id="delete">Delete Last Brush Stroke</button>
+        </p>
+
+        <!--  <p>Drawing Mode:<br> -->
+        <p>
+          <button type="button" class="button" id="pointButton">Square</button>
+          <button type="button" class="button" id="triButton">Triangle</button>
+          <button type="button" class="button" id="circleButton">Circle</button>
+        </p>
+
+          <!--SLIDERS-->
+        <p>
+          Shape Size [5px - 40px]: <br><input type="range" min="5" max="40" value="10" class="slider" id="sizeSlide"> 
+        </p>
+        <p>Shape Color [R,G,B]:<br>
+          <input type="range" min="0" max="100" value="100" class="slider" id="redSlide"><br> 
+          <input type="range" min="0" max="100" value="100" class="slider" id="greenSlide"><br> 
+          <input type="range" min="0" max="100" value="100" class="slider" id="blueSlide"><br>  
+        </p>
+        <p>
+          Segment Count [Circles]: <br><input type="range" min="6" max="50" value="10" class="slider" id="circleSegments">
+        </p>
+        <p>
+          <button type="button" class="button" id="drawPicture">Draw Example Picture</button>
+        </p>
+        <img id="drawingBlueprint" src="Images/Dominic_Cabrera_Asgn1_drawing.JPG" alt="Blueprint">
+      </div>
+    </div>
+
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="Shapes/Circle.js"></script>
+    <script src="Shapes/Triangle.js"></script>
+    <script src="Shapes/Point.js"></script>
+    <script src="ColoredPoints.js"></script>
+  </body>
+</html>
