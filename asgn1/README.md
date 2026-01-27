@@ -3,6 +3,8 @@
   - document.css: to control my font and general appearance display
   - slideButtonStyle.css: to style my buttons and sliders.
   - cursor.css: to style my cursor
+- some code was copy and pasted from websites (links provided below) to give me a starting template of 
+  stylization to modify
 
 .js modifications:
 - handleClicks() renamed as click() in .js file
@@ -22,6 +24,7 @@ instruction 13 - drawing:
   - renderDrawing() paints my picture
   - randomizeColor() is a helper function that randomizes the color of my drawing's triangles
   - findSign() is a helper function for my drawing algorithm
+- In my .js file, I added paintStars() to create a randomized backdrop of stars behind my main object
 
 Resources:
 - Sources to help me understand and apply .css code to style my wepage
@@ -29,7 +32,6 @@ Resources:
   - 2020 CSE 160 Youtube Helper Videos: I watched all the videos to set up my code. Because of this, much of my code from instructions 1 - 11 match the code that the professor writes in the helper videos. 
   - ChatGPT: to streamline my understanding of HTML, Javascript, and CSS. I am still fairly new to these languages (first time using these languages regularly), so I am using ChatGPT to assist my understanding.
 
-- APIs
   - Math.random(): https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
   - https://www.w3schools.com/css/css_font.asp
   - https://www.w3schools.com/howto/howto_js_rangeslider.asp

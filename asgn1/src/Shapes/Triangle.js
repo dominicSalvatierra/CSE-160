@@ -142,6 +142,7 @@ class Triangle {
     let xSign, ySign;
     let xySigns = [];
     //let lowLimit = 0;
+    //this.paintStars(); 
     while (i < 4) {
       xySigns = this.findSign(angle);
       //console.log()

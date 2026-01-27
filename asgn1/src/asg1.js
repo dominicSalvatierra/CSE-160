@@ -38,12 +38,14 @@ let g_selectedSize = 10.0;
 let g_selectedSegments = 10.0;
 let g_selectedType = POINT;
 let g_draw = 0;
+let g_starsDrawn = 0;
 
 function setupPageStyle(){
   const cursor = document.createElement('div');
   cursor.id = 'fakeCursor';
   document.body.appendChild(cursor);
 
+  // this event listener determines the location of the click on the canvas
   document.addEventListener('mousemove', (e) => {
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
@@ -53,6 +55,7 @@ function setupPageStyle(){
   document.documentElement.style.setProperty('--ui-accent', `rgb(${255},${255},${255})`);
 }
 
+// use this function to update the cursor color by reading from g_selectedColor
 function updateCursorColor(){
   document.documentElement.style.setProperty('--ui-accent', `rgb(${g_selectedColor[0] * 255},${g_selectedColor[1] * 255},${g_selectedColor[2] * 255})`);
 }
@@ -112,20 +115,45 @@ function connectVariablesToGLSL(){
  // }
 }
 
+// straightforward function that deletes the last point by removing it from the end of shapesList array
 function deleteBrushStroke(){
   g_shapesList.pop();
   renderAllShapes();
 }
 
+// helper function that paints stars using the Point (square) class
+function paintStars() {
+  let i = 0;
+  // generate 300 "stars", randomize their locations on canvas, and push on shapesList
+  while (i < 300) {
+    let point = new Point();
+    point.position = [Math.random() * 2 - 1, Math.random() * 2 - 1];
+    point.color = [1, 1, 1, 1];
+    point.size = (canvas.width + 200) / (canvas.width);
+    g_shapesList.push(point);
+    i += 1;
+  }
+}
+
 function addActionsForHtmlUI(){
   // BUTTON Events (shape type)
-  document.getElementById('clearButton').onclick = function() {g_shapesList = []; renderAllShapes();};
+  document.getElementById('clearButton').onclick = function() {
+    g_shapesList = [];
+    g_starsDrawn = 0; //rest starsDrawn to 0 now that all "stars" have been cleared
+    renderAllShapes();
+  };
   document.getElementById('pointButton').onclick = function() {g_selectedType = POINT;};
   document.getElementById('triButton').onclick = function() {g_selectedType = TRIANGLE;};
   document.getElementById('circleButton').onclick = function() {g_selectedType = CIRCLE;};
   document.getElementById('delete').onclick = function() {deleteBrushStroke();};
   document.getElementById('drawPicture').onclick = function() {
+    // first check that no stars are drawn. If so, ignore
+    if (g_starsDrawn == 0) {
+      paintStars();
+      g_starsDrawn = 1;
+    }
     let point = new Triangle();
+    // point.draw enables Triangle class to draw the picture
     point.draw = 1;
     g_shapesList.push(point);
     renderAllShapes();
@@ -164,6 +192,7 @@ function convertCoordinatesEventToGL(ev) {
   return [x,y];
 }
 
+// code from CSE 160 helper videos
 function sendTextToHTML(text, htmlID) {
   var hmtlElm = document.getElementById(htmlID);
   if (!hmtlElm) {
