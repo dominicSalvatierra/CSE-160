@@ -129,7 +129,7 @@ function paintStars() {
     let point = new Point();
     point.position = [Math.random() * 2 - 1, Math.random() * 2 - 1];
     point.color = [1, 1, 1, 1];
-    point.size = (canvas.width + 200) / (canvas.width);
+    point.size = (canvas.width + (canvas.width / 2.5)) / (canvas.width);
     g_shapesList.push(point);
     i += 1;
   }
@@ -264,7 +264,6 @@ function click(ev) {
   // DRAW THIS NEW STATE OF MY "WORLD"
   renderAllShapes();
 }
-
 
 function main() {
   setupWebGL();

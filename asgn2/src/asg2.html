@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Change a point color</title>
+    <link rel="stylesheet" href="CSS/document.css">
+    <link rel="stylesheet" href="CSS/slideButtonStyle.css">
+    <link rel="stylesheet" href="CSS/cursor.css">
+  </head>
+
+  <body onload="main()">
+    <div class="page">
+      <canvas id="webgl" width="800" height="800">
+      Please use a browser that supports "canvas"
+      </canvas>
+      <div class="panel">
+        <p>Dominic Cabrera<br>
+          docabrer@ucsc.edu
+        </p>
+        <p>Notes to Grader: Shift-Key-Click for penguin action. Speed Slider controls Animation speed. Three joints connected and controllable
+          across the penguin's legs, feet, and toes. x-y-z directions of these joints are affected in the animation. 
+        </p>
+        <hr class="divider">
+        <p id="numdot"> numdot: 0    ms: 0    fps: 0 </p>
+  
+        <p>Animation:<br>
+          <button type="button" class="button" id="animateWalkON">On</button>
+          <button type="button" class="button" id="animateWalkOFF">Off</button><br>
+          Speed<br><input type="range" min="1" max="40" value="5" class="slider" id="walkSpeedSlider">
+        </p>
+
+        <!--  <p>Drawing Mode:<br> -->
+        <!--
+        <p>
+          <button type="button" class="button" id="pointButton">Square</button>
+          <button type="button" class="button" id="triButton">Triangle</button>
+          <button type="button" class="button" id="circleButton">Circle</button>
+        </p>-->
+
+          <!--SLIDERS-->
+     <!--   <p>
+          Shape Size [5px - 40px]: <br><input type="range" min="5" max="40" value="10" class="slider" id="sizeSlide"> 
+        </p>
+      -->
+        <p>Move Camera:<br>
+          x-axis <br><input type="range" min="0" max="360" value="0" class="slider" id="xSlide">
+          y-axis <br><input type="range" min="0" max="360" value="0" class="slider" id="ySlide">
+          z-axis <br><input type="range" min="0" max="360" value="0" class="slider" id="zSlide">
+        </p>
+        <!--<p>Move Body:<br>
+          x-axis <br><input type="range" min="0" max="360" value="0" class="slider" id="xBodyMove">
+          y-axis <br><input type="range" min="0" max="360" value="0" class="slider" id="yBodyMove">
+          z-axis <br><input type="range" min="0" max="360" value="0" class="slider" id="zBodyMove">
+        </p>-->
+        <p>
+        <p>Move Limbs<br>
+          Wings: <input type="range" min="0" max="90" value="0" class="slider" id="wingsSlider"><br> 
+          Left Leg:<input type="range" min="0" max="50" value="25" class="slider" id="leftLeg"><br> 
+          Left Foot:<input type="range" min="0" max="20" value="10" class="slider" id="leftFoot"><br> 
+          Left Toes:<input type="range" min="0" max="29" value="10" class="slider" id="leftToes"><br> 
+          Right Leg:<input type="range" min="0" max="50" value="25" class="slider" id="rightLeg"><br>  
+          Right Foot:<input type="range" min="0" max="20" value="10" class="slider" id="rightFoot"><br>  
+          Right Toes:<input type="range" min="0" max="29" value="10" class="slider" id="rightToes"><br>  
+          <!--
+        </p>  
+          <button type="button" class="button" id="drawPicture">Draw Example Picture</button>
+        </p>
+        <img id="drawingBlueprint" src="Images/Dominic_Cabrera_Asgn1_drawing.JPG" alt="Blueprint">
+      -->
+      </div>
+    </div>
+
+    <script src="../lib/cuon-matrix.js"></script>
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="Shapes/trianglePrism.js"></script>
+    <script src="Shapes/Cube.js"></script>
+    <script src="Shapes/Triangle.js"></script>
+    <script src="asg2.js"></script>
+  </body>
+</html>
