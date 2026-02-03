@@ -165,9 +165,7 @@ function addMouseRotateControls(canvas) {
     g_lastMouseY = ev.clientY;
   });
 
-  window.addEventListener("mouseup", () => {
-    g_isDragging = false;
-  });
+  window.addEventListener("mouseup", () => { g_isDragging = false; });
 
   window.addEventListener("mousemove", (ev) => {
     if (!g_isDragging) return;
@@ -177,7 +175,7 @@ function addMouseRotateControls(canvas) {
     g_lastMouseX = ev.clientX;
     g_lastMouseY = ev.clientY;
 
-    // sensitivity: degrees per pixel (tweak to taste)
+    // sensitivity: degrees per pixel
     const s = 0.5;
 
     // Common convention:
@@ -302,6 +300,8 @@ function addActionsForHtmlUI(){
     renderAllShapes(); });
 }
 
+//helper function suggested by ChatGPT that I do not use, but that I did test. 
+/*
 function getMouseNDC(ev, canvas) {
   const rect = canvas.getBoundingClientRect();
   const x = ev.clientX - rect.left;
@@ -311,9 +311,10 @@ function getMouseNDC(ev, canvas) {
   const ndcX = (x / canvas.width) * 2 - 1;
   const ndcY = 1 - (y / canvas.height) * 2;
   return [ndcX, ndcY];
-}
+}*/
 
 // extract the event click and return it in WebGL coordinates
+/*
 function convertCoordinatesEventToGL(ev) {
   var x = ev.clientX; // x coordinate of a mouse pointer
   var y = ev.clientY; // y coordinate of a mouse pointer
@@ -323,7 +324,7 @@ function convertCoordinatesEventToGL(ev) {
   y = (canvas.height/2 - (y - rect.top))/(canvas.height/2);
 
   return [x,y];
-}
+}*/
 
 // code from CSE 160 helper videos
 function sendTextToHTML(text, htmlID) {
@@ -1215,7 +1216,7 @@ function main() {
   //canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev) }}
 
   // Specify the color for clearing <canvas>
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clearColor(0.0, 0.55, 0.6, 1.0);
 
   // Clear <canvas>
   //gl.clear(gl.COLOR_BUFFER_BIT);
