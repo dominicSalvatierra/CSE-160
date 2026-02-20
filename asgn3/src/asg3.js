@@ -527,9 +527,14 @@ function addActionsForHtmlUI(){
     onMove(ev, 0);
   });
   
+  canvas.addEventListener("mouseenter", () => {
+    canvas.style.cursor = "none";
+  });
+
   canvas.addEventListener("mouseleave", () => {
     g_lastMouseX = 0;
     g_lastMouseY = 0;
+    canvas.style.cursor = "default";
   });
 
   canvas.addEventListener("click", (ev) => {

@@ -2,6 +2,7 @@ UI:
 - 3 buttons to generate three different mazes
 - click to add a column of blocks. shift + click to delete a column of blocks
 - use mouse to rotate camera when hovering in the canvas
+- add / delete functionality is disabled when in maze modes
 
 .css files:
 - N/A
