@@ -1,0 +1,33 @@
+html, body {
+  cursor: none;
+}
+  
+#fakeCursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  transform: translate(-0px, -8px);
+}
+    
+#fakeCursor::before,
+#fakeCursor::after {
+  content: '';
+  position: absolute;
+  background: var(--ui-accent);;  /* ← any color */
+}
+    
+#fakeCursor::before {
+  left: 5px;
+  top: 0;
+  width: 3px;
+  height: 20px;
+}
+    
+#fakeCursor::after {
+  top: 9px;
+  left: 0;
+  width: 20px;
+  height: 3px;
+}
+  

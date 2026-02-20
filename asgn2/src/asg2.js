@@ -971,7 +971,7 @@ function renderHeadNeck(rotMat) {
   ra[10].matrix.rotate(180,1,0,0);
   ra[10].matrix.rotate(-90,0,1,0);
 
-  ra[11].color = [95,0.8,0,1];
+  ra[11].color = [.95,0.8,0,1];
   ra[11].matrix.translate(0,0.65,0.24);
   ra[11].matrix.rotate(moveHeadXdir,0,1,0);
   ra[11].matrix.translate(0.1,0,-0.085);
@@ -1061,10 +1061,11 @@ box.matrix.translate(0, 0.7, 0);
 box.render();
 }
 
-function setUpRotMat() {
+function setUpRotMat(scalar) {
   let rotMat = new Matrix4();
   
-  rotMat.setRotate(g_zBodyMove,0,0,1);
+  rotMat.setScale(scalar,scalar,scalar);
+  rotMat.rotate(g_zBodyMove,0,0,1);
   rotMat.rotate(g_yBodyMove,0,1,0);
   rotMat.rotate(g_xBodyMove,1,0,0);
   if (g_animateWalk) {
@@ -1091,7 +1092,7 @@ function renderAllShapes() {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   g_walkSpeed = g_seconds * g_speedTimes;
-  let funcRotMat = setUpRotMat();
+  let funcRotMat = setUpRotMat(0.75);
 
   renderUpperBody(funcRotMat);
   renderLowerBody(funcRotMat);
