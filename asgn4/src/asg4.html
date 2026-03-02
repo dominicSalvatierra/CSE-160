@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Change a point color</title>
+    <link rel="stylesheet" href="CSS/document.css">
+    <link rel="stylesheet" href="CSS/slideButtonStyle.css">
+    <!--<link rel="stylesheet" href="CSS/cursor.css">-->
+  </head>
+
+  <body onload="main()">
+    <div class="page">
+      <canvas id="webgl" width="800" height="800">
+      Please use a browser that supports "canvas"
+      </canvas>
+      <div class="panel">
+        <p>Dominic Cabrera<br>
+          docabrer@ucsc.edu
+        </p>
+        <p>
+          Press keys 1-2-3-4 to turn off and on the normal state, point light, spot light, 
+          and to generate the object, respectfully. The object replaces the light orb when 'Generate Object' is
+          clicked or the '4' key is pressed. Move with W-A-S-D.
+          Rotate with Q-E. Click canvas for Pointer Lock. Press ESC to exit pointer lock. 
+          World Map used and Block Animals located in each map corner.
+        </p>
+        <hr class="divider">
+        <p id="numdot"> numdot: 0    ms: 0    fps: 0 </p>
+        <button type="button" class="button" id="normalOn">Normal On</button> 
+        <button type="button" class="button" id="normalOff">Normal Off</button>  (Optionally, Press '1')
+        <br>
+        <br>
+        <button type="button" class="button" id="lightOn">Point Light ON</button>
+        <button type="button" class="button" id="lightOff">Point Light OFF</button> (Press '2')
+        <br>
+        <br>
+        <button type="button" class="button" id="spotlightOn">Spotlight ON</button>
+        <button type="button" class="button" id="spotlightOff">Spotlight OFF</button> (Press '3')
+        <br>
+        <br>
+        <button type="button" class="button" id="objectOn"> Generate Object</button>
+        <button type="button" class="button" id="objectOff"> Remove Object</button> (Press '4')
+        <br>
+        <br>
+          Light-x <br><input type="range" min="-100" max="100" value="0" class="slider" id="lightSlideX">
+          Light-y <br><input type="range" min="-50" max="150" value="75" class="slider" id="lightSlideY">
+          Light-z <br><input type="range" min="-100" max="100" value="0" class="slider" id="lightSlideZ">
+        <br>
+        <br>
+          Light-r <br><input type="range" min="0" max="100" value="70" class="slider" id="lightRedSlide">
+          Light-g <br><input type="range" min="0" max="100" value="70" class="slider" id="lightGreenSlide">
+          Light-b <br><input type="range" min="0" max="100" value="70" class="slider" id="lightBlueSlide">
+        <br>
+        <br>
+          Diffuse <br><input type="range" min="0" max="100" value="100" class="slider" id="diffuseSlide">
+          Ambient <br><input type="range" min="0" max="40" value="30" class="slider" id="ambientSlide">
+          Specular <br><input type="range" min="0" max="150" value="100" class="slider" id="specularSlide">
+        <br>
+        <!--
+        <br>
+        <button type="button" class="button" id="generateMaze1">Generate Maze 1</button>
+        <button type="button" class="button" id="generateMaze2">Generate Maze 2</button>
+        <button type="button" class="button" id="generateMaze3">Generate Maze 3</button> 
+        <br>
+        <br>
+        <button type="button" class="button" id="originalMap">Return to Original Map</button>
+        -->
+
+  <!--
+        <p>Animation:<br>
+          <button type="button" class="button" id="animateWalkON">On</button>
+          <button type="button" class="button" id="animateWalkOFF">Off</button><br>
+          Speed<br><input type="range" min="1" max="40" value="5" class="slider" id="walkSpeedSlider">
+        </p>
+
+        <p>Move Camera:<br>
+          x-axis <br><input type="range" min="0" max="360" value="0" class="slider" id="xSlide">
+          y-axis <br><input type="range" min="0" max="360" value="0" class="slider" id="ySlide">
+          z-axis <br><input type="range" min="0" max="360" value="0" class="slider" id="zSlide">
+        </p>
+
+        
+        <p>
+        <p>Move Limbs<br>
+          Wings: <input type="range" min="0" max="90" value="0" class="slider" id="wingsSlider"><br> 
+          Left Leg:<input type="range" min="0" max="50" value="25" class="slider" id="leftLeg"><br> 
+          Left Foot:<input type="range" min="0" max="20" value="10" class="slider" id="leftFoot"><br> 
+          Left Toes:<input type="range" min="0" max="29" value="10" class="slider" id="leftToes"><br> 
+          Right Leg:<input type="range" min="0" max="50" value="25" class="slider" id="rightLeg"><br>  
+          Right Foot:<input type="range" min="0" max="20" value="10" class="slider" id="rightFoot"><br>  
+          Right Toes:<input type="range" min="0" max="29" value="10" class="slider" id="rightToes"><br>  
+      </div>
+      -->
+    </div>
+
+    <!--<script src="../lib/cuon-matrix.js"></script>-->
+    <script src="../lib/cuon-matrix-cse160.js"></script>
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="Shapes/sphereVertices.js"></script>
+    <script src="Shapes/trianglePrism.js"></script>
+    <script src="Shapes/Sphere.js"></script>
+    <script src="Shapes/Cube.js"></script>
+    <script src="Shapes/Model.js"></script>
+    <script src="Shapes/Triangle.js"></script>
+    <script src="Classes/penguin.js"></script>
+    <script src="Classes/camera.js"></script>
+    <script src="Classes/maze.js"></script>
+    <script src="asg4.js"></script>
+  </body>
+</html>
