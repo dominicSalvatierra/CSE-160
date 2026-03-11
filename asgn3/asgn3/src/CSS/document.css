@@ -1,0 +1,42 @@
+body {
+    background-color: rgb(40, 40, 40);
+    color: white;
+  }
+  
+  .page{
+    display: flex;
+    align-items: flex-start;   /* top-align */
+    gap: 100px;                 /* space between canvas and UI */
+  }
+
+  .panel{
+    background: rgb(60, 60, 60);          /* panel color */
+    border: 0px solid #444;       /* edge */
+    border-radius: 0px;           /* rounded corners */
+    padding: 8px;                /* space inside the box */
+    width: 530px;                 /* control panel width */
+  
+    box-shadow: 0 0px 0px rgba(0,0,0,0.5); /* depth */
+  }
+
+  #header {
+    white-space: pre;
+  }
+
+  #numdot {
+    white-space: pre;
+  }
+
+  #drawingBlueprint {
+    display: flex;
+    margin-top: 20px;
+    width: 300px;   
+  }
+
+  .divider{
+    border: none;              /* remove default ugly line */
+    height: 4px;               /* thickness */
+    background: rgb(100,100,100);          /* color */
+    margin: 10px 0;            /* spacing above/below */
+    opacity: 0.85;
+  }
