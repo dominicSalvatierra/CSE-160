@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Change a point color</title>
+    <link rel="stylesheet" href="CSS/document.css">
+    <link rel="stylesheet" href="CSS/slideButtonStyle.css">
+    <!--<link rel="stylesheet" href="CSS/cursor.css">-->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@<version>/examples/jsm/"
+      }
+    }
+    </script>
+  </head>
+
+  <body onload="main()">
+    <div class="page">
+      <canvas id="webgl" width="800" height="800">
+      Please use a browser that supports "canvas"
+      </canvas>
+      <div class="panel">
+        <p>Dominic Cabrera<br>
+          docabrer@ucsc.edu
+        </p>
+        <p>
+          Press keys 1-2-3-4 to turn off and on the normal state, point light, spot light, 
+          and to generate the object, respectfully. The object replaces the light orb when 'Generate Object' is
+          clicked or the '4' key is pressed. Move with W-A-S-D.
+          Rotate with Q-E. Click canvas for Pointer Lock. Press ESC to exit pointer lock. 
+          World Map used and Block Animals located in each map corner.
+        </p>
+        <hr class="divider">
+        <p id="numdot"> numdot: 0    ms: 0    fps: 0 </p>
+      </div>
+    </div>
+
+    <!--<script src="../lib/cuon-matrix.js"></script>-->
+    <script src="../lib/cuon-matrix-cse160.js"></script>
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <script src="Shapes/sphereVertices.js"></script>
+    <script src="Shapes/trianglePrism.js"></script>
+    <script src="Shapes/Sphere.js"></script>
+    <script src="Shapes/Cube.js"></script>
+    <script src="Shapes/Model.js"></script>
+    <script src="Shapes/Triangle.js"></script>
+    <script src="Classes/penguin.js"></script>
+    <script src="Classes/camera.js"></script>
+    <script src="Classes/maze.js"></script>
+    <script src="asg5.js"></script>
+  </body>
+</html>

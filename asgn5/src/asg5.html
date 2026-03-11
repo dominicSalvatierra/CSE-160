@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Change a point color</title>
+    <link rel="stylesheet" href="CSS/document.css">
+    <link rel="stylesheet" href="CSS/slideButtonStyle.css">
+    <!--<link rel="stylesheet" href="CSS/cursor.css">-->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.183.2/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.183.2/examples/jsm/"
+      }
+    }
+    </script>
+  </head>
+
+  <body>
+    <div class="page">
+      <!--<canvas id="webgl" width="800" height="800">
+      Please use a browser that supports "canvas"
+      </canvas>-->
+      <canvas id="c"></canvas>
+
+      <div class="panel">             
+        <p>Dominic Cabrera<br>
+          docabrer@ucsc.edu
+        </p>
+        <p>
+          Don't look down! My object comes up from abyss. When it crosses the 0 plane, the scene changes. To exit resulting scene
+          and to return to the original scene, press the letter key 'O'. Not much more than that - to reenter into that second scene,
+          the website must be reloaded. <br>
+          Press 'C' to toggle between the Pointer Lock and Orbit Controls. W-A-S-D keys controls forward-left-backwards-right
+          movements when in Pointer Lock. 'esc' can also be pressed to unlock from Pointer Controls and enable Orbit Controls.
+        </p>
+        <hr class="divider">
+        <p id="numdot"> numdot: 0    ms: 0    fps: 0 </p>
+      </div>
+    </div>
+
+    <!--<script src="../lib/cuon-matrix.js"></script>-->
+    <script src="../lib/cuon-matrix-cse160.js"></script>
+    <script src="../lib/webgl-utils.js"></script>
+    <script src="../lib/webgl-debug.js"></script>
+    <script src="../lib/cuon-utils.js"></script>
+    <!--
+    <script src="Shapes/sphereVertices.js"></script>
+    <script src="Shapes/trianglePrism.js"></script>
+    <script src="Shapes/Sphere.js"></script>
+    <script src="Shapes/Cube.js"></script>
+    <script src="Shapes/Model.js"></script>
+    <script src="Shapes/Triangle.js"></script>
+    <script src="Classes/penguin.js"></script>
+    <script src="Classes/camera.js"></script>
+    <script src="Classes/maze.js"></script>
+    <script src="asg5.js"></script>
+    -->
+    <script type="module" src="asg5.js"></script>
+  </body>
+</html>
