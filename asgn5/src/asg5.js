@@ -32,7 +32,7 @@ function main () {
   let paused = false;
   let offset = false;
 
-  camera.position.set(0, 1, 20);
+  camera.position.set(0, 1, 40);
   camera.up.set(0, 1.5, 0);
   camera.lookAt(0, 1.5, -1000);
   //orbitControls.update();
@@ -50,7 +50,7 @@ function main () {
   let portalLightPositionsX = [];
   let portalLightPositionsY = [];
   let portalLightPositionsZ = [];
-  let object;
+  //let object;
   let scene1Tex;
   let exit = false;
 
@@ -272,7 +272,7 @@ function main () {
 
     // add obj loaded "mainframe"
     const objLoader = new OBJLoader();
-    objLoader.load('./Shapes/Mainframe.obj', (root) => {
+    /*objLoader.load('./Shapes/Mainframe.obj', (root) => {
       root.position.y = 300;
       root.scale.set(30,30,30);
       object = root;
@@ -281,9 +281,9 @@ function main () {
         if (child.isMesh) {
           child.material.color.set(0x1010FF);
         }
-      });
+      }); 
       //scene.add(root);
-    });
+    }); */
 
     /*
     for (let i = 0; i < 2; i++ ) {
@@ -318,12 +318,17 @@ function main () {
         }
       });        
       let root1 = root.clone(true);
+      //const particle1Tex = loader.load('../resources/stars0.jpg');
+      //particle1Tex.colorSpace = THREE.SRGBColorSpace;
+
       root1.traverse((child) => {
         if (child.isMesh) {
           child.material = new THREE.MeshPhongMaterial({
-            color: 0xFFFFFF,
-            emissive: 0x555022,
-            emissiveIntensity: 0.0,
+            //map: particle1Tex,
+            //side: THREE.FrontSide,
+            color: 0x050000,
+            //emissive: 0x555022,
+            //emissiveIntensity: 0.0,
           });
         }
       }); 
@@ -355,22 +360,16 @@ function main () {
     scene0.add(particleLight[0]);
 
     //SCENE1
-    color = 0xFFFFFF;
-    intensity = 0; 
-    const ambient1 = new THREE.AmbientLight(color, intensity);
-    scene1.add(ambient1);
-
-    color = 0xFFFFFF;
-    intensity = 50000;
-    portalLights[0] = new THREE.PointLight(color, intensity);
-    portalLights[0].position.set(500,0,0);
-    scene1.add(portalLights[0]);
+    //color = 0xFFFFFF;
+    //intensity = 0; 
+    //const ambient1 = new THREE.AmbientLight(color, intensity);
+    //scene1.add(ambient1);
 
     let i = 0
     //for lights on right wall
     for (; i < 12; i++) {
-      lightColor = new THREE.Color(Math.random(), Math.random(), Math.random());
-      intensity = Math.random() * 10000 + 0;
+      lightColor = new THREE.Color(1,1,1);
+      intensity = Math.random() * 10000 + 90000;
       portalLights[i] = new THREE.PointLight(lightColor, intensity);
       portalLightPositionsX[i] = 500;
       portalLightPositionsY[i] = Math.floor(Math.random() * 1000 - 500);
@@ -380,8 +379,8 @@ function main () {
 
     //for lights on front wall
     for (; i < 24; i++) {
-      lightColor = new THREE.Color(Math.random(), Math.random(), Math.random());
-      intensity = Math.random() * 10000 + 0;
+      lightColor = new THREE.Color(1,1,1);
+      intensity = Math.random() * 10000 + 90000;
       portalLights[i] = new THREE.PointLight(lightColor, intensity);
       portalLightPositionsX[i] = Math.floor(Math.random() * 1000 - 500);
       portalLightPositionsY[i] = Math.floor(Math.random() * 1000 - 500);
@@ -391,8 +390,8 @@ function main () {
 
     //for lights on left wall
     for (; i < 36; i++) {
-      lightColor = new THREE.Color(Math.random(), Math.random(), Math.random());
-      intensity = Math.random() * 10000 + 0;
+      lightColor = new THREE.Color(1,1,1); //Math.random(), Math.random(), Math.random()
+      intensity = Math.random() * 10000 + 90000;
       portalLights[i] = new THREE.PointLight(lightColor, intensity);
       portalLightPositionsX[i] = -500;
       portalLightPositionsY[i] = Math.floor(Math.random() * 1000 - 500);
@@ -402,8 +401,8 @@ function main () {
 
     //for lights on back wall
     for (; i < 48; i++) {
-      lightColor = new THREE.Color(Math.random(), Math.random(), Math.random());
-      intensity = Math.random() * 10000 + 0;
+      lightColor = new THREE.Color(1,1,1);
+      intensity = Math.random() * 10000 + 90000;
       portalLights[i] = new THREE.PointLight(lightColor, intensity);
       portalLightPositionsX[i] = Math.floor(Math.random() * 1000 - 500);
       portalLightPositionsY[i] = Math.floor(Math.random() * 1000 - 500);
@@ -474,6 +473,7 @@ function main () {
     //  object.rotation.x = time / 4;
     //} 
     const trigger = ((time * 1000) % 50000) - 25000;
+    //const trigger = 0;
 
     //let y = ((time * 1000) % 50000) - 25000;
     if (trigger < -1 && !entered) {
@@ -554,7 +554,7 @@ function main () {
         //portalLights[0].position.set(500, y, 0);
 
         for (let i = 0; i < portalLights.length; i++) {
-          y = (((time * 1000) + portalLightPositionsY[i]) % 10000) - 5000;
+          y = (((time + portalLightPositionsY[i]) * 1000) % 10000) - 5000;
           portalLights[i].position.set(portalLightPositionsX[i], y, portalLightPositionsZ[i]);
         }
 
