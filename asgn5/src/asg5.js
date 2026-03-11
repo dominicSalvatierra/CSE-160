@@ -220,6 +220,18 @@ function main () {
       mesh.scale.set(2, 2, 2);
       scene0.add(mesh);
     }
+
+    const octGeometry = new THREE.OctahedronGeometry( 1, 2 );
+    const octMaterial = new THREE.MeshBasicMaterial({ color: 0x992222 });
+    const octMesh = new THREE.Mesh(octGeometry, octMaterial);
+    scene0.add(octMesh);
+
+    const cylGeometry = new THREE.CylinderGeometry(
+        0.5, 0.5, 4, 3 );
+    const cylMaterial = new THREE.MeshBasicMaterial({ color: 0x552222 });
+    const cylMesh = new THREE.Mesh(cylGeometry, cylMaterial);
+    scene0.add(cylMesh);
+
   }
 
   //0x882222
@@ -318,14 +330,14 @@ function main () {
         }
       });        
       let root1 = root.clone(true);
-      //const particle1Tex = loader.load('../resources/stars0.jpg');
-      //particle1Tex.colorSpace = THREE.SRGBColorSpace;
+      const particle1Tex = loader.load('../resources/stars3.jpg');
+      particle1Tex.colorSpace = THREE.SRGBColorSpace;
 
       root1.traverse((child) => {
         if (child.isMesh) {
           child.material = new THREE.MeshPhongMaterial({
-            //map: particle1Tex,
-            //side: THREE.FrontSide,
+            map: particle1Tex,
+            side: THREE.FrontSide,
             color: 0x050000,
             //emissive: 0x555022,
             //emissiveIntensity: 0.0,
