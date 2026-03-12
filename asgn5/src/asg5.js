@@ -2,8 +2,10 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
+import {MTLLoader} from 'three/addons/loaders/MTLLoader.js';
 //import Pyramid from './Shapes/Pyramid.js'
 import * as Pyramid from './Shapes/createPyramidGeometry.js';
+import {isocaUVs} from './Shapes/isocaUVs.js';
 
 
 function main () {
@@ -31,9 +33,10 @@ function main () {
   let currentTime = 0;
   let paused = false;
   let offset = false;
+  let risen = false;
 
-  camera.position.set(0, 1, 40);
-  camera.up.set(0, 1.5, 0);
+  camera.position.set(0, 1.5, 100);
+  camera.up.set(0, 1, 0);
   camera.lookAt(0, 1.5, -1000);
   //orbitControls.update();
 
@@ -43,13 +46,29 @@ function main () {
   //SCENE
   const scene0 = new THREE.Scene();
   const scene1 = new THREE.Scene();
+  const scene2 = new THREE.Scene();
   let objects = [];
   let particles = [];
-  let particleLight = [];
+  let isocas = [];
+  let isocaPositionsX = [];
+  let isocaPositionsY = [];
+  let isocaPositionsZ = [];
+  let isocaRotationX = [];
+  let isocaRotationY = [];
+  let isocaRotationZ = [];
+
+  let particleLight0 = [];
+  let particleLight2 = [];
   let portalLights = [];
   let portalLightPositionsX = [];
   let portalLightPositionsY = [];
   let portalLightPositionsZ = [];
+  let spotLight0;
+  let spotLight2;
+  const lookDir = new THREE.Vector3();
+  const targetPos = new THREE.Vector3(); 
+  let spotLightOn = false;
+
   //let object;
   let scene1Tex;
   let exit = false;
@@ -62,6 +81,7 @@ function main () {
   addSkyBox();
   addLattice();
   addObjects();
+  addScene02Shapes();
   //addSolarSystem();
   addLights();
   requestAnimationFrame(render);
@@ -81,6 +101,15 @@ function main () {
       if (e.code === 'KeyO') {
         if (entered) {
           exit = true;
+        }
+      }
+
+      if (e.code === 'KeyF') {
+        if (!spotLightOn) {
+            spotLightOn = true;
+        }
+        else {
+            spotLightOn = false;
         }
       }
     });
@@ -163,7 +192,10 @@ function main () {
 
     const geometry0 = new THREE.BoxGeometry( 1000, 50000, 1000 );
     const skyBox0 = new THREE.Mesh( geometry0, materials );
-    scene0.add( skyBox0 );    
+    scene0.add( skyBox0 );   
+
+    const skyBox2 = skyBox0.clone();
+    scene2.add( skyBox2 ); 
 
     scene1Tex = loader.load('../resources/stars2.jpg');
     scene1Tex.colorSpace = THREE.SRGBColorSpace;
@@ -195,6 +227,9 @@ function main () {
       mesh.position.set(step, -2, 0);
       mesh.scale.set(2, 2, 2);
       scene0.add(mesh);
+
+      const mesh_copy = mesh.clone();
+      scene2.add(mesh_copy);
     }
 
     // to front wall
@@ -203,6 +238,9 @@ function main () {
       mesh.position.set(0, -2, -step);
       mesh.scale.set(2, 2, 2);
       scene0.add(mesh);
+
+      const mesh_copy = mesh.clone();
+      scene2.add(mesh_copy);
     }
 
     // to left wall
@@ -211,6 +249,9 @@ function main () {
       mesh.position.set(-step, -2, 0);
       mesh.scale.set(2, 2, 2);
       scene0.add(mesh);
+
+      const mesh_copy = mesh.clone();
+      scene2.add(mesh_copy);
     }
 
     // to back wall
@@ -219,18 +260,10 @@ function main () {
       mesh.position.set(0, -2, step);
       mesh.scale.set(2, 2, 2);
       scene0.add(mesh);
+
+      const mesh_copy = mesh.clone();
+      scene2.add(mesh_copy);
     }
-
-    const octGeometry = new THREE.OctahedronGeometry( 1, 2 );
-    const octMaterial = new THREE.MeshBasicMaterial({ color: 0x992222 });
-    const octMesh = new THREE.Mesh(octGeometry, octMaterial);
-    scene0.add(octMesh);
-
-    const cylGeometry = new THREE.CylinderGeometry(
-        0.5, 0.5, 4, 3 );
-    const cylMaterial = new THREE.MeshBasicMaterial({ color: 0x552222 });
-    const cylMesh = new THREE.Mesh(cylGeometry, cylMaterial);
-    scene0.add(cylMesh);
 
   }
 
@@ -239,6 +272,99 @@ function main () {
   //0x4E5F68
   //0x999990
   function addObjects() {
+    // add obj loaded "mainframe"
+    const mtlLoader = new MTLLoader();
+    mtlLoader.load('./Shapes/Mainframe.mtl', (mtl) => {
+      mtl.preload();
+      //for (const material of Object.values(mtl.materials)) {
+      //  material.side = THREE.DoubleSide;
+      //}
+      const objLoader = new OBJLoader();
+      objLoader.setMaterials(mtl);
+      objLoader.load('./Shapes/Mainframe.obj', (root) => {
+        /*
+        root.traverse((child) => {
+          if (child.isMesh) {
+            //child.material = new THREE.MeshPhongMaterial({
+            //  color: 0x1010FF,
+            //  emissive: 0x555022,
+            //  emissiveIntensity: 0.05,
+            //});
+            child.material.color.set(0x7A2E2E);
+            child.material.color.multiplyScalar(0.7);
+          }
+        });        
+        
+        let root1 = root.clone(true);
+        //const particle1Tex = loader.load('../resources/stars3.jpg');
+        //particle1Tex.colorSpace = THREE.SRGBColorSpace;
+        
+        root1.traverse((child) => {
+          if (child.isMesh) {
+            //child.material = new THREE.MeshPhongMaterial({
+              //map: particle1Tex,
+              //side: THREE.FrontSide,
+              //color: 0x050000,
+              //emissive: 0x555022,
+              //emissiveIntensity: 0.0,
+            //});
+            child.material.color.set(0xCC8E8E);
+            child.material.color.multiplyScalar(2);
+          }
+        }); 
+
+        let root2 = root.clone(true);
+        root2.traverse((child) => {
+            if (child.isMesh) {
+              child.material.color.set(0x7A2E2E);
+              child.material.color.multiplyScalar(0.7);
+            }
+          }); 
+        */
+          root.traverse((child) => {
+            if (child.isMesh) {
+              child.material = child.material.clone();
+              child.material.color.set(0x7A2E2E);
+              child.material.color.multiplyScalar(0.7);
+            }
+          });
+
+          let root1 = root.clone(true);
+        root1.traverse((child) => {
+          if (child.isMesh) {
+            child.material = child.material.clone();
+            child.material.color.set(0xCC8E8E);
+            child.material.color.multiplyScalar(2);
+          }
+        });
+
+        let root2 = root.clone(true);
+        root2.traverse((child) => {
+          if (child.isMesh) {
+            child.material = child.material.clone();
+            child.material.color.set(0x7A2E2E);
+            child.material.color.multiplyScalar(0.7);
+          }
+        });
+          
+        
+
+        particles[0] = root;
+        particles[1] = root1;
+        particles[2] = root2;
+
+        particles[0].scale.set(50, 50, 50);
+        particles[1].scale.set(50, 50, 50);
+        particles[2].scale.set(50, 50, 50);
+  
+        scene0.add(particles[0]);
+        scene1.add(particles[1]);
+        scene2.add(particles[2]);
+      });
+    });
+  }
+
+  function addScene02Shapes() {
     // add central light object
     const loader = new THREE.TextureLoader();
 
@@ -265,95 +391,104 @@ function main () {
     cube0.scale.set(10,10,10);
     cube0.rotation.y = Math.PI / 2;
     //cube0.position.set(0,6,0);
-    
-    //const cube1 = new THREE.Mesh( geometry, materials );
-    //cube1.scale.set(10,10,10);
 
-    const cube2 = new THREE.Mesh( geometry, materials );
-    cube2.scale.set(10,10,10)
-    cube2.rotation.y =  - Math.PI / 2;
+
+    const cube1 = new THREE.Mesh( geometry, materials );
+    cube1.scale.set(10,10,10)
+    cube1.rotation.y =  - Math.PI / 2;
     //cube2.position.set(0,-6,0);
 
     objects.push(cube0);
-    //objects.push(cube1);
-    objects.push(cube2);
+    objects.push(cube1);
     scene0.add( cube0 );  
-    //scene.add( cube1 );  
-    scene0.add( cube2 );  
+    scene0.add( cube1 ); 
+    
+    const cube02 = cube0.clone();
+    const cube12 = cube1.clone();
+    objects.push(cube02);
+    objects.push(cube12);
+    scene2.add( cube02 );  
+    scene2.add( cube12 ); 
+
+    //SCENE2 EXCLUSIVE shapes
+    const radius = 7;  
+    const detail = 0;
+    const icosaGeometry = new THREE.IcosahedronGeometry( radius, detail );
+    icosaGeometry.setAttribute(
+      'uv',
+      new THREE.Float32BufferAttribute(isocaUVs, 2)
+    );
+
+    const icosaTexture = loader.load('../resources/face0.jpg');
+    icosaTexture.colorSpace = THREE.SRGBColorSpace;
+    const icosaMaterial =  new THREE.MeshPhongMaterial({ map: icosaTexture, side: THREE.DoubleSide});
+    const icosaMesh0 = new THREE.Mesh( icosaGeometry, icosaMaterial);
+    icosaMesh0.scale.set(20,20,20);
+    icosaMesh0.position.set(0,250,-500);
+    icosaMesh0.rotation.y = Math.PI / 2;
+    //right wall
+    isocas.push(icosaMesh0);
+    isocaPositionsX[0] = 500; //620
+    isocaPositionsY[0] = Math.floor(Math.random() * 70 + 250);
+    isocaPositionsZ[0] = 0;
+    isocaRotationX[0] = 0;
+    isocaRotationY[0] = 0;
+    isocaRotationZ[0] = 0;
 
 
-    // add obj loaded "mainframe"
-    const objLoader = new OBJLoader();
-    /*objLoader.load('./Shapes/Mainframe.obj', (root) => {
-      root.position.y = 300;
-      root.scale.set(30,30,30);
-      object = root;
+    //front wall
+    const icosaMesh1 = icosaMesh0.clone();
+    isocas.push(icosaMesh1);
+    isocaPositionsX[1] = 0;
+    isocaPositionsY[1] = Math.floor(Math.random() * 70 + 250);
+    isocaPositionsZ[1] = -500; //-620
+    isocaRotationX[1] = 0;
+    isocaRotationY[1] = Math.PI / 2;
+    isocaRotationZ[1] = 0;
 
-      root.traverse((child) => {
-        if (child.isMesh) {
-          child.material.color.set(0x1010FF);
-        }
-      }); 
-      //scene.add(root);
-    }); */
+    //left wall
+    const icosaMesh2 = icosaMesh0.clone();
+    isocas.push(icosaMesh2);
+    isocaPositionsX[2] = -500; //-620
+    isocaPositionsY[2] = Math.floor(Math.random() * 70 + 250);
+    isocaPositionsZ[2] = 0;
+    isocaRotationX[2] = 0;
+    isocaRotationY[2] = Math.PI;
+    isocaRotationZ[2] = 0;
 
-    /*
-    for (let i = 0; i < 2; i++ ) {
-      objLoader.load('./Shapes/Mainframe.obj', (root) => {
-        root.scale.set(50,50,50);
-        root.position.y = 10;
-        //root.position.x = i * 10 - 30;
-        particles[i] = root;
-  
-        root.traverse((child) => {
-          if (child.isMesh) {
-            child.material = new THREE.MeshPhongMaterial({
-              color: 0x1010FF,
-              emissive: 0x555022,
-              emissiveIntensity: 0.0,
-            });
-          }
-        });
-      });
-      scene0.add(particles[1]);
-    }
-    scene1.add(particles[1]);
-    */
-    objLoader.load('./Shapes/Mainframe.obj', (root) => {
-      root.traverse((child) => {
-        if (child.isMesh) {
-          child.material = new THREE.MeshPhongMaterial({
-            color: 0x1010FF,
-            emissive: 0x555022,
-            emissiveIntensity: 0.05,
-          });
-        }
-      });        
-      let root1 = root.clone(true);
-      const particle1Tex = loader.load('../resources/stars3.jpg');
-      particle1Tex.colorSpace = THREE.SRGBColorSpace;
 
-      root1.traverse((child) => {
-        if (child.isMesh) {
-          child.material = new THREE.MeshPhongMaterial({
-            map: particle1Tex,
-            side: THREE.FrontSide,
-            color: 0x050000,
-            //emissive: 0x555022,
-            //emissiveIntensity: 0.0,
-          });
-        }
-      }); 
 
-      particles[0] = root;
-      particles[1] = root1;
+    //back wall
+    const icosaMesh3 = icosaMesh0.clone();
+    isocas.push(icosaMesh3);
+    isocaPositionsX[3] = 0;
+    isocaPositionsY[3] = Math.floor(Math.random() * 70 + 250);
+    isocaPositionsZ[3] = 500; //620
+    isocaRotationX[3] = 0;
+    isocaRotationY[3] = -1 * Math.PI / 2; 
+    isocaRotationZ[3] = 0;
 
-      particles[0].scale.set(50, 50, 50);
-      particles[1].scale.set(50, 50, 50);
 
-      scene0.add(particles[0]);
-      scene1.add(particles[1]);
-    });
+    //dodeMesh.rotation.x = Math.PI / 5;
+    //dodeMesh.rotation.z = Math.PI;
+    scene2.add(icosaMesh0);
+    scene2.add(icosaMesh1);
+    scene2.add(icosaMesh2);
+    scene2.add(icosaMesh3);
+
+    //const octGeometry = new THREE.OctahedronGeometry( 1, 2 );
+    //const octMaterial = new THREE.MeshBasicMaterial({ color: 0x992222 });
+    //const octMesh = new THREE.Mesh(octGeometry, octMaterial);
+    //scene0.add(octMesh);
+
+    const cylTexture = loader.load('../resources/rusty_metal.jpg');
+    const cylGeometry = new THREE.CylinderGeometry(  0.5, 0.5, 4, 3 );
+    const cylMaterial = new THREE.MeshBasicMaterial({ map: cylTexture, color: 0x7A2E2E });
+    const cylMesh0 = new THREE.Mesh(cylGeometry, cylMaterial);
+    scene0.add(cylMesh0);
+
+    const cylMesh2 = cylMesh0.clone();
+    scene2.add(cylMesh2);
   }
 
 
@@ -364,24 +499,52 @@ function main () {
     let lightColor;
     let color = 0xFFFF00;
     let intensity = 100000;
-    const light1 = new THREE.PointLight(color, intensity);
-    light1.position.set(0,50,0);
+    const light0 = new THREE.PointLight(color, intensity);
+    light0.position.set(0,50,0);
+    particleLight0[0] = new THREE.PointLight(color, intensity);
 
-    particleLight[0] = new THREE.PointLight(color, intensity);
-    scene0.add(light1);
-    scene0.add(particleLight[0]);
+    scene0.add(light0);
+    scene0.add(particleLight0[0]);
+
+    const light2 = light0.clone();
+    particleLight2[0] = particleLight0[0].clone();
+
+    const spotLightColor = 0xffffff;
+    const spotLightInt = 50000;
+    spotLight0 = new THREE.SpotLight(spotLightColor, spotLightInt);
+    spotLight0.angle = Math.PI / 8;
+    spotLight0.penumbra = 0.3;
+    spotLight0.distance = 2000;
+    spotLight0.decay = 1.5;
+    scene0.add(spotLight0);
+    scene0.add(spotLight0.target);
+
+    spotLight2 = new THREE.SpotLight(spotLightColor, spotLightInt);
+    spotLight2.angle = Math.PI / 8;
+    spotLight2.penumbra = 0.3;
+    spotLight2.distance = 2000;
+    spotLight2.decay = 1.5;
+    scene2.add(spotLight2);
+    scene2.add(spotLight2.target);
+
+    scene2.add(light2);
+    scene2.add(particleLight2[0]);
 
     //SCENE1
-    //color = 0xFFFFFF;
-    //intensity = 0; 
-    //const ambient1 = new THREE.AmbientLight(color, intensity);
-    //scene1.add(ambient1);
+    color = 0xFFFFFF;
+    intensity = 0.1; 
+    const ambient1 = new THREE.AmbientLight(color, intensity);
+    scene1.add(ambient1);
+
+    //const ambient2Tmp = ambient1.clone();
+    //ambient2Tmp.intensity = 1;
+    //scene2.add(ambient2Tmp);
 
     let i = 0
     //for lights on right wall
-    for (; i < 12; i++) {
-      lightColor = new THREE.Color(1,1,1);
-      intensity = Math.random() * 10000 + 90000;
+    for (; i < 3; i++) {
+      lightColor = new THREE.Color(1, 1, 1);
+      intensity = Math.random() * 40000 + 10000;
       portalLights[i] = new THREE.PointLight(lightColor, intensity);
       portalLightPositionsX[i] = 500;
       portalLightPositionsY[i] = Math.floor(Math.random() * 1000 - 500);
@@ -390,9 +553,9 @@ function main () {
     }
 
     //for lights on front wall
-    for (; i < 24; i++) {
-      lightColor = new THREE.Color(1,1,1);
-      intensity = Math.random() * 10000 + 90000;
+    for (; i < 6; i++) {
+      lightColor = new THREE.Color(1, 1, 1);
+      intensity = Math.random() * 40000 + 10000;
       portalLights[i] = new THREE.PointLight(lightColor, intensity);
       portalLightPositionsX[i] = Math.floor(Math.random() * 1000 - 500);
       portalLightPositionsY[i] = Math.floor(Math.random() * 1000 - 500);
@@ -401,9 +564,9 @@ function main () {
     }
 
     //for lights on left wall
-    for (; i < 36; i++) {
-      lightColor = new THREE.Color(1,1,1); //Math.random(), Math.random(), Math.random()
-      intensity = Math.random() * 10000 + 90000;
+    for (; i < 9; i++) {
+      lightColor = new THREE.Color(1, 1, 1); //Math.random(), Math.random(), Math.random()
+      intensity = Math.random() * 40000 + 10000;
       portalLights[i] = new THREE.PointLight(lightColor, intensity);
       portalLightPositionsX[i] = -500;
       portalLightPositionsY[i] = Math.floor(Math.random() * 1000 - 500);
@@ -412,9 +575,9 @@ function main () {
     }
 
     //for lights on back wall
-    for (; i < 48; i++) {
-      lightColor = new THREE.Color(1,1,1);
-      intensity = Math.random() * 10000 + 90000;
+    for (; i < 12; i++) {
+      lightColor = new THREE.Color(1, 1, 1);
+      intensity = Math.random() * 40000 + 10000;
       portalLights[i] = new THREE.PointLight(lightColor, intensity);
       portalLightPositionsX[i] = Math.floor(Math.random() * 1000 - 500);
       portalLightPositionsY[i] = Math.floor(Math.random() * 1000 - 500);
@@ -422,9 +585,6 @@ function main () {
       scene1.add(portalLights[i]);
     }    
     
-
-    //console.log(portalLightPositions);
-
   }
 
   //RESIZE RENDERER TO DISPLAY SIZE FUNCTION
@@ -485,7 +645,7 @@ function main () {
     //  object.rotation.x = time / 4;
     //} 
     const trigger = ((time * 1000) % 50000) - 25000;
-    //const trigger = 0;
+    //const trigger = -2;
 
     //let y = ((time * 1000) % 50000) - 25000;
     if (trigger < -1 && !entered) {
@@ -509,8 +669,8 @@ function main () {
           offset = true;
         }
         currentTime = time - offsetTime;  
-        renderScene0();
-        renderer.render(scene0, camera);
+        renderScene2();
+        renderer.render(scene2, camera);
       }
     }
     //renderer.render(scene2, camera);
@@ -527,9 +687,10 @@ function main () {
 
         //incorporate particles falling
         const y = ((currentTime * 1000) % 50000) - 25000;
+        //const y = 0;
         if (particles[0]) {
           particles[0].position.set(0, y, 0);
-          particleLight[0].position.set(0, y, 0);
+          particleLight0[0].position.set(0, y, 0);
           particles[0].rotation.y = currentTime / 2;
           particles[0].rotation.x = currentTime / 2;
         }
@@ -557,8 +718,20 @@ function main () {
             objects[i].position.y = 0;
             objects[i].position.z = 0;
           }
+
           //objects[i].position.x = 3 * Math.sin(spin * time / 4);
         }
+
+        if (spotLightOn) {
+          camera.getWorldDirection(lookDir);
+          spotLight0.position.copy(camera.position);
+          targetPos.copy(camera.position).add(lookDir.multiplyScalar(100));
+          spotLight0.target.position.copy(targetPos);
+          spotLight0.visible = true;
+        }
+        else {
+          spotLight0.visible = false;
+        }        
       }
 
       function renderScene1() {
@@ -576,8 +749,67 @@ function main () {
           particles[1].position.set(0, 0, 0);
           particles[1].rotation.y = time / 8;
           particles[1].rotation.x = time / 8;
+          if ((time % 12 < 0.3)) {
+            //scene1Tex.offset.y += time;
+            particles[1].position.x = Math.random() * 8 - 2;
+            particles[1].position.y = Math.random() * 8 - 2;
+            particles[1].position.z = Math.random() * 8 - 2;
+          }
+          else {
+            //scene1Tex.offset.y += 0.0001;
+            particles[1].position.x = 0;
+            particles[1].position.y = 0;
+            particles[1].position.z = 0;
+          }
+        }
+      }
+
+      function renderScene2() {
+        const y = ((currentTime * 1000) % 50000) - 24999;
+        //console.log(y + 100);
+        if (25000 < (y + 100)) {
+          risen = true;
+        }
+        if (!risen) {
+          if (particles[2]) {
+            particles[2].position.set(0, y, 0);
+            particleLight2[0].position.set(0, y, 0);
+            particles[2].rotation.y = currentTime / 2;
+            particles[2].rotation.x = currentTime / 2;
+          }
+        }
+        else {
+            particles[2].scale.set(0, 0, 0);
+            particleLight2[0].color.set(0x000000);
+        }
+    
+        //rotate central column blocks on y-axis
+        for (let i = 2; i < objects.length; i++) {
+            let spin = (-1) ** i;
+            objects[i].rotation.y = spin * currentTime / 12;
+        }
+
+        for (let i = 0; i < 4; i++ )
+        {
+            isocas[i].position.set(isocaPositionsX[i], isocaPositionsY[i], isocaPositionsZ[i]);
+            isocas[i].rotation.x = isocaRotationX[i];
+            isocas[i].rotation.y = isocaRotationY[i];
+            isocas[i].rotation.z = isocaRotationZ[i];
+        }
+
+        if (spotLightOn) {
+            camera.getWorldDirection(lookDir);
+            spotLight2.position.copy(camera.position);
+            targetPos.copy(camera.position).add(lookDir.multiplyScalar(100));
+            spotLight2.target.position.copy(targetPos);
+            spotLight2.visible = true;
+        }
+        else {
+            spotLight2.visible = false;
         }
       }
   } //end render(time) FUNCTION
+
+
 }
 main();
