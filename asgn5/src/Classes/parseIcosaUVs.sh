@@ -1,7 +1,7 @@
 #!/opt/homebrew/bin/bash
 
-if [[ "$1" == "none" ]]; then
-    out="isocaUVs.js"
+if [[ "$1" == "" ]]; then
+    out="template_icosaUVs.js"
 else
     out="$1"
 fi
@@ -9,8 +9,8 @@ fi
 flag="$2"
 tmp=$(mktemp)
 
-echo "export const isocaUVs = ["  >"$out"
-python3 ./createIsocaUVs.py > "$tmp"
+echo "export const icosaUVs = [" > "$out"
+python3 createIcosaUVs.py > "$tmp"
 sed -i '' 's/\[//g; s/, /,/g' "$tmp"
 sed -i '' 's/\]/,/g' "$tmp"
 cat "$tmp" >> "$out"

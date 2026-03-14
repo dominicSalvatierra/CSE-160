@@ -5,8 +5,8 @@ import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
 import {MTLLoader} from 'three/addons/loaders/MTLLoader.js';
 //import Pyramid from './Shapes/Pyramid.js'
 import * as Pyramid from './Shapes/createPyramidGeometry.js';
+import {icosaUVs} from './Classes/icosaUVs.js';
 import {Icosahedron} from './Classes/icosahedron.js';
-import {Vector3, Vector4, Matrix4} from '../lib/cuon-matrix-cse160.js';
 
 
 function main () {
@@ -26,7 +26,7 @@ function main () {
   const pointerControls = new PointerLockControls( camera, renderer.domElement );
 
   const keysDown = new Set();
-  const moveSpeed = 50;
+  const moveSpeed = 10;
   let lastTime = 0;
   let entered = false;
   let stoppedTime = 0;
@@ -35,16 +35,10 @@ function main () {
   let paused = false;
   let offset = false;
   let risen = false;
-  //let previousCamVec = new Vector3([0,0,0]);
-  let checked = false;
 
-  camera.position.set(200, 1.5, -100);
+  camera.position.set(0, 1.5, 100);
   camera.up.set(0, 1, 0);
   camera.lookAt(0, 1.5, -1000);
-  let cameraVector = new Vector3( [camera.position.x, camera.position.y, camera.position.z] );
-  console.log( cameraVector );
-  //cameraVector.setElements( [0.5,0.5,0.5] );
-  //console.log( cameraVector );
   //orbitControls.update();
 
   orbitControls.target.set(0, 0, 0);
@@ -56,15 +50,13 @@ function main () {
   const scene2 = new THREE.Scene();
   let objects = [];
   let particles = [];
-  let icosas = [];
-  /*
-  let icosaPositionsX = [];
-  let icosaPositionsY = [];
-  let icosaPositionsZ = [];
-  let icosaRotationX = [];
-  let icosaRotationY = [];
-  let icosaRotationZ = [];
-  */
+  let isocas = [];
+  let isocaPositionsX = [];
+  let isocaPositionsY = [];
+  let isocaPositionsZ = [];
+  let isocaRotationX = [];
+  let isocaRotationY = [];
+  let isocaRotationZ = [];
 
   let particleLight0 = [];
   let particleLight2 = [];
@@ -93,17 +85,6 @@ function main () {
   addScene02Shapes();
   //addSolarSystem();
   addLights();
-  console.log("right before render");
-  for (let i = 0; i < 4; i++ ) {
-    console.log(i);
-    console.log(icosas[i]);
-    console.log(icosas[i].positionX, icosas[i].positionY, icosas[i].positionZ);
-    console.log(icosas[i].rotationX, icosas[i].rotationY, icosas[i].rotationZ);
-    console.log(icosas[i].cameraVectorXZ);
-    console.log(icosas[i].lastCamVectorXZ);
-    console.log(icosas[i].mesh);
-  }
-
   requestAnimationFrame(render);
 
   function addActionsForHtmlUI(){ 
@@ -431,51 +412,11 @@ function main () {
     scene2.add( cube12 ); 
 
     //SCENE2 EXCLUSIVE shapes
-    for (let i = 0; i < 4; i++ ) {
-      icosas.push(new Icosahedron());
-    }
-
-    icosas[0].createMesh(7,0,'../resources/face0.jpg');
-    icosas[0].mesh.scale.set(20,20,20);
-    icosas[1].mesh = icosas[0].mesh.clone();
-    icosas[2].mesh = icosas[0].mesh.clone();
-    icosas[3].mesh = icosas[0].mesh.clone();
-
-    icosas[0].setPosition(500, Math.floor(Math.random() * 70 + 250), 0);
-    icosas[1].setPosition(0, Math.floor(Math.random() * 70 + 250), -500);
-    icosas[2].setPosition(-500, Math.floor(Math.random() * 70 + 250), 0);
-    icosas[3].setPosition(0, Math.floor(Math.random() * 70 + 250), 500);
-
-    for ( let i = 0; i < 4; i++ ) {
-      console.log("start loop" + i);
-      icosas[i].setRotation(0, i * Math.PI / 2, 0);
-      icosas[i].lastCamVectorXZ.setElements([0 - icosas[i].positionX, 0, 0 - icosas[i].positionZ]).normalize();
-      //icosas[i].setLastCamVectorXZ(0 - icosas[i].positionX, 0 - icosas[i].positionZ);
-      icosas[i].findCameraVectorXZ(camera.position.x, camera.position.z);
-      //console.log(i + ": ");
-      //console.log(camera.position)
-      let angle = Math.acos(Vector3.dot(icosas[i].cameraVectorXZ, icosas[i].lastCamVectorXZ));
-      const crossForAngleDir = Vector3.cross(icosas[i].lastCamVectorXZ, icosas[i].cameraVectorXZ);
-      //console.log(crossForAngleDir);
-      if (crossForAngleDir.elements[1] < 0) {
-        //console.log(i + ": this motherfucker is negative!");
-        angle *= -1;
-      }
-      //console.log(i + ": " + angle * (180 / Math.PI));
-      console.log(icosas[i].rotationX * (180 / Math.PI), icosas[i].rotationY * (180 / Math.PI), icosas[i].rotationZ * (180 / Math.PI))
-      icosas[i].setRotation(icosas[i].rotationX, icosas[i].rotationY + angle, icosas[i].rotationZ);     
-      console.log(icosas[i].rotationX * (180 / Math.PI), icosas[i].rotationY * (180 / Math.PI), icosas[i].rotationZ * (180 / Math.PI))
-      icosas[i].setLastCamVectorXZ();
-      console.log(icosas[i].lastCamVectorXZ);
-      console.log("finish loop" + i);
-    }
-
-    for ( let i = 0; i < 4; i++ ) {
-      console.log(icosas[i].cameraVectorXZ);
-      console.log(icosas[i].lastCamVectorXZ);
-    }
-
-    /*
+    //isocas.push(new Isocahedron());
+    //isocas[0].createMesh(7,0,'../resources/face0.jpg');
+    //isocas[0].mesh.scale.set(20,20,20);
+    //isocas[0].setPosition(500, Math.floor(Math.random() * 70 + 250, 0);
+    //isocas[0].setRotation(0, 0, 0);
     const radius = 7;  
     const detail = 0;
     const icosaGeometry = new THREE.IcosahedronGeometry( radius, detail );
@@ -492,65 +433,63 @@ function main () {
     //icosaMesh0.position.set(0,250,-500);
     //icosaMesh0.rotation.y = Math.PI / 2;
     //right wall
-    icosas.push(icosaMesh0);
-    icosaPositionsX[0] = 500; //620
-    icosaPositionsY[0] = Math.floor(Math.random() * 70 + 250);
-    icosaPositionsZ[0] = 0;
-    icosaRotationX[0] = 0;
-    icosaRotationY[0] = 0;
-    icosaRotationZ[0] = 0;
-    
+    isocas.push(icosaMesh0);
+    isocaPositionsX[0] = 500; //620
+    isocaPositionsY[0] = Math.floor(Math.random() * 70 + 250);
+    isocaPositionsZ[0] = 0;
+    isocaRotationX[0] = 0;
+    isocaRotationY[0] = 0;
+    isocaRotationZ[0] = 0;
 
     //front wall
-    const icosaMesh1 = icosas[0].mesh.clone();
-    icosas.push(icosaMesh1);
-    icosaPositionsX[1] = 0;
-    icosaPositionsY[1] = Math.floor(Math.random() * 70 + 250);
-    icosaPositionsZ[1] = -500; //-620
-    icosaRotationX[1] = 0;
-    icosaRotationY[1] = Math.PI / 2;
-    icosaRotationZ[1] = 0; 
-    */
+    const icosaMesh1 = icosaMesh0.clone();
+    isocas.push(icosaMesh1);
+    isocaPositionsX[1] = 0;
+    isocaPositionsY[1] = Math.floor(Math.random() * 70 + 250);
+    isocaPositionsZ[1] = -500; //-620
+    isocaRotationX[1] = 0;
+    isocaRotationY[1] = Math.PI / 2;
+    isocaRotationZ[1] = 0; 
+    
    /*
     icosaMesh1.scale.set(4,4,4);
-    icosaPositionsX[1] = 0;
-    icosaPositionsY[1] = 0;
-    icosaPositionsZ[1] = 0; //-620
-    icosaRotationX[1] = 0;
-    icosaRotationY[1] = Math.PI / 2;
-    icosaRotationZ[1] = 0;
+    isocaPositionsX[1] = 0;
+    isocaPositionsY[1] = 0;
+    isocaPositionsZ[1] = 0; //-620
+    isocaRotationX[1] = 0;
+    isocaRotationY[1] = Math.PI / 2;
+    isocaRotationZ[1] = 0;
     */
 
-    /*
     //left wall
-    const icosaMesh2 = icosas[0].mesh.clone();
-    icosas.push(icosaMesh2);
-    icosaPositionsX[2] = -500; //-620
-    icosaPositionsY[2] = Math.floor(Math.random() * 70 + 250);
-    icosaPositionsZ[2] = 0;
-    icosaRotationX[2] = 0;
-    icosaRotationY[2] = Math.PI;
-    icosaRotationZ[2] = 0;
+    const icosaMesh2 = icosaMesh0.clone();
+    isocas.push(icosaMesh2);
+    isocaPositionsX[2] = -500; //-620
+    isocaPositionsY[2] = Math.floor(Math.random() * 70 + 250);
+    isocaPositionsZ[2] = 0;
+    isocaRotationX[2] = 0;
+    isocaRotationY[2] = Math.PI;
+    isocaRotationZ[2] = 0;
 
 
 
     //back wall
-    const icosaMesh3 = icosas[0].mesh.clone();
-    icosas.push(icosaMesh3);
-    icosaPositionsX[3] = 0;
-    icosaPositionsY[3] = Math.floor(Math.random() * 70 + 250);
-    icosaPositionsZ[3] = 500; //620
-    icosaRotationX[3] = 0;
-    icosaRotationY[3] = -1 * Math.PI / 2; 
-    icosaRotationZ[3] = 0;
-*/
+    const icosaMesh3 = icosaMesh0.clone();
+    isocas.push(icosaMesh3);
+    isocaPositionsX[3] = 0;
+    isocaPositionsY[3] = Math.floor(Math.random() * 70 + 250);
+    isocaPositionsZ[3] = 500; //620
+    isocaRotationX[3] = 0;
+    isocaRotationY[3] = -1 * Math.PI / 2; 
+    isocaRotationZ[3] = 0;
+
 
     //dodeMesh.rotation.x = Math.PI / 5;
     //dodeMesh.rotation.z = Math.PI;
-    scene2.add(icosas[0].mesh);
-    scene2.add(icosas[1].mesh);
-    scene2.add(icosas[2].mesh);
-    scene2.add(icosas[3].mesh);
+    scene2.add(icosaMesh0);
+    scene2.add(icosaMesh1);
+    scene2.add(icosaMesh2);
+    scene2.add(icosaMesh3);
 
     //const octGeometry = new THREE.OctahedronGeometry( 1, 2 );
     //const octMaterial = new THREE.MeshBasicMaterial({ color: 0x992222 });
@@ -612,9 +551,9 @@ function main () {
     const ambient1 = new THREE.AmbientLight(color, intensity);
     scene1.add(ambient1);
 
-    const ambient2Tmp = ambient1.clone();
-    ambient2Tmp.intensity = 1;
-    scene2.add(ambient2Tmp);
+    //const ambient2Tmp = ambient1.clone();
+    //ambient2Tmp.intensity = 1;
+    //scene2.add(ambient2Tmp);
 
     let i = 0
     //for lights on right wall
@@ -866,51 +805,15 @@ function main () {
             objects[i].rotation.y = spin * currentTime / 12;
         }
 
-        for (let i = 0; i < 4; i++ ) {
-          if (!checked) {
-            console.log("in renderScene2: " + i);
-            console.log(icosas[i]);
-            console.log(icosas[i].positionX, icosas[i].positionY, icosas[i].positionZ);
-            console.log(icosas[i].rotationX, icosas[i].rotationY, icosas[i].rotationZ);
-            console.log(icosas[i].cameraVectorXZ);
-            console.log(icosas[i].lastCamVectorXZ);
-            console.log(icosas[i].mesh);
-            console.log("find my camera position");
-            icosas[i].findCameraVectorXZ(camera.position.x, camera.position.z);
-            console.log(icosas[i].cameraVectorXZ);
-            console.log("dot: " + Vector3.dot(icosas[i].cameraVectorXZ, icosas[i].lastCamVectorXZ));
-            let aCosTheta = Vector3.dot(icosas[i].cameraVectorXZ, icosas[i].lastCamVectorXZ);
-            console.log("aCosTheta: " + aCosTheta);
-            let angle = Math.acos( Math.max(-1, Math.min(1, aCosTheta)) );
-            console.log("angle: " + angle);
-            const crossForAngleDir = Vector3.cross(icosas[i].lastCamVectorXZ, icosas[i].cameraVectorXZ);
-     
-            if (crossForAngleDir.elements[1] < 0) {
-                angle *= -1;
-            } 
-            console.log("angle: " + angle);
-          }
-            //console.log(icosas[i].rotationX * (180 / Math.PI), icosas[i].rotationY * (180 / Math.PI), icosas[i].rotationZ * (180 / Math.PI));
-         /*   icosas[i].setRotation(0, i * Math.PI / 2, 0);
-            //icosas[i].lastCamVectorXZ.setElements([0 - icosas[i].positionX, 0, 0 - icosas[i].positionZ]).normalize();
-            */
-            icosas[i].findCameraVectorXZ(camera.position.x, camera.position.z);
-      
-            let aCosTheta = Vector3.dot(icosas[i].cameraVectorXZ, icosas[i].lastCamVectorXZ);
-            let angle = Math.acos( Math.max(-1, Math.min(1, aCosTheta)) );
-            const crossForAngleDir = Vector3.cross(icosas[i].lastCamVectorXZ, icosas[i].cameraVectorXZ);
-     
-            if (crossForAngleDir.elements[1] < 0) {
-                angle *= -1;
-            } 
-            
-            icosas[i].setRotation(icosas[i].rotationX, icosas[i].rotationY + angle, icosas[i].rotationZ);     
-            icosas[i].setLastCamVectorXZ(); 
-            
-            //icosas[i].setRotation(icosas[i].rotationX, icosas[i].rotationY, icosas[i].rotationZ);
+        for (let i = 0; i < 4; i++ )
+        {
+            //console.log("i = " + i); 
+            isocas[i].position.set(isocaPositionsX[i], isocaPositionsY[i], isocaPositionsZ[i]);
+            isocas[i].rotation.x = isocaRotationX[i];
+            isocas[i].rotation.y = isocaRotationY[i];
+            isocas[i].rotation.z = isocaRotationZ[i];
         }
 
-        //console.log(camera.position.x);
         if (spotLightOn) {
             camera.getWorldDirection(lookDir);
             spotLight2.position.copy(camera.position);
@@ -922,9 +825,6 @@ function main () {
             spotLight2.visible = false;
         }
       }
-      checked = true;
-
-      //function moveIsocas
   } //end render(time) FUNCTION
 
 

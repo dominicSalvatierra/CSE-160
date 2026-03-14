@@ -15,7 +15,7 @@ ASGN5.JS:
     - Square: used as center shapes in scene 0 and 2
     - Cylinder: generated within the center square shape in scene 0 and 2
     - Isocahedron: scene 2, look around and up to spot the shapes peeking out of walls with horror texture on them. There
-      should be one on each wall
+      should be one on each wallc
     - Pyramid: self implemented shape that make four suspended pathways in scenes 0 and 2
 - addLights() implement my lights in both my scenes
     - Point light sources: (1) at center, and (1) tracking with my imported object as it rises up abyss

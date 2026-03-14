@@ -6,7 +6,7 @@
  * The matrix is replaced by the calculated result.
  */
 
-class Vector3 {
+export class Vector3 {
     constructor(opt_src) {
         var v = new Float32Array(3);
         if (opt_src && typeof opt_src === 'object') {
@@ -38,6 +38,26 @@ class Vector3 {
         }
 
         return this;
+    }
+
+    setElements( newElements ) {
+      console.log("in setElements");
+      console.log( newElements );
+      //this makes this.elements point to newElements, which is a regular array
+      //this.elements = newElements;
+      //this copies my elements into my typed array
+      const e = this.elements;
+      e[0] = newElements[0];
+      e[1] = newElements[1];
+      e[2] = newElements[2];
+      console.log( this.elements );
+      console.log("exit setElements");
+      return this;
+    }
+
+    getElements() {
+      const e = this.elements;
+      return [e[0], e[1], e[2]];
     }
 
     /**
@@ -157,7 +177,7 @@ class Vector3 {
     };
 }
 
-class Vector4 {
+export class Vector4 {
     /**
      * Constructor of Vector4
      * If opt_src is specified, new vector is initialized by opt_src.
@@ -175,7 +195,7 @@ class Vector4 {
     }
 }
 
-class Matrix4 {
+export class Matrix4 {
     /**
      * Constructor of Matrix4
      * If opt_src is specified, new matrix is initialized by opt_src.
