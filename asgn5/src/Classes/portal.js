@@ -1,9 +1,13 @@
 import * as THREE from 'three';
-import {icosaUVs} from './icosaUVs.js';
 import {Vector3, Vector4, Matrix4} from '../../lib/cuon-matrix-cse160.js';
 
-export class Icosahedron {
+export class Portal {
     constructor() {
+      this.cube0 = null;
+      this.cube1 = null;
+      this.cube02 = null;
+      this.cube12 = null;
+
       this.positionsX = 0;
       this.positionsY = 0;
       this.positionsZ = 0;
@@ -37,6 +41,7 @@ export class Icosahedron {
       this.mesh = null;
     } 
 
+    //createMesh( scale, rotY ) {
     createMesh( r, det, texturePath ) {
       const loader = new THREE.TextureLoader();
 
@@ -49,6 +54,53 @@ export class Icosahedron {
       const mesh = new THREE.Mesh( geometry, material);
 
       this.mesh = mesh;
+
+      /*
+      const loader = new THREE.TextureLoader();
+
+      const rightTex = loader.load('../resources/side0.jpg');
+      rightTex.colorSpace = THREE.SRGBColorSpace;
+      const backTex  = loader.load('../resources/side1.jpg');
+      backTex.colorSpace = THREE.SRGBColorSpace;
+      const leftTex  = loader.load('../resources/side2.jpg');
+      leftTex.colorSpace = THREE.SRGBColorSpace;
+      const frontTex = loader.load('../resources/side3.jpg');
+      frontTex.colorSpace = THREE.SRGBColorSpace;
+
+      const materials = [
+        new THREE.MeshBasicMaterial({ map: rightTex, side: THREE.DoubleSide}), // +x
+        new THREE.MeshBasicMaterial({ map: leftTex,  side: THREE.DoubleSide }), // -x
+        new THREE.MeshBasicMaterial({ color: 0x333333, transparent: true, opacity: 0.0, side: THREE.BackSide }), // top
+        new THREE.MeshBasicMaterial({ color: 0x333333, transparent: true, opacity: 0.0, side: THREE.BackSide }), // bottom
+        new THREE.MeshBasicMaterial({ map: frontTex, side: THREE.DoubleSide }), // +z
+        new THREE.MeshBasicMaterial({ map: backTex,  side: THREE.DoubleSide }), // -z
+      ];    
+  
+      const geometry = new THREE.BoxGeometry();
+      this.cube0 = new THREE.Mesh( geometry, materials );
+      this.cube0.scale.set(scale,scale,scale);
+      this.cube0.rotation.y = rotY; 
+    //cube0.position.set(0,6,0);
+
+
+    //const cube1 = new THREE.Mesh( geometry, materials );
+    //cube1.scale.set(10,10,10)
+      this.cube1 = this.cube0.clone()
+      this.cube1.rotation.y =  - rotY;
+    //this.cube2.position.set(0,-6,0);
+      this.cube02 = this.cube0.clone();
+      this.cube12 = this.cube1.clone();
+
+      //objects.push(cube0);
+      //objects.push(cube1);
+      //scene0.add( cube0 );  
+      //scene0.add( cube1 ); 
+    
+      //objects.push(cube02);
+      //objects.push(cube12);
+      //scene2.add( cube02 );  
+      //scene2.add( cube12 ); 
+      */
     }
 
     setPosition(x,y,z) {

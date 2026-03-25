@@ -41,8 +41,8 @@ export class Vector3 {
     }
 
     setElements( newElements ) {
-      console.log("in setElements");
-      console.log( newElements );
+      //console.log("in setElements");
+      //console.log( newElements );
       //this makes this.elements point to newElements, which is a regular array
       //this.elements = newElements;
       //this copies my elements into my typed array
@@ -50,8 +50,8 @@ export class Vector3 {
       e[0] = newElements[0];
       e[1] = newElements[1];
       e[2] = newElements[2];
-      console.log( this.elements );
-      console.log("exit setElements");
+      //console.log( this.elements );
+      //console.log("exit setElements");
       return this;
     }
 
@@ -131,19 +131,46 @@ export class Vector3 {
         return d;
     }
 
+     /**
+      * Calcualte the dop product between this THREE.vector and other.
+      * @return scalar
+      */
+     static dotThree(other1, other2) {
+      // Insert your code here.
+      const a = other1.x * other2.elements[0];
+      const b = other1.y * other2.elements[1];
+      const c = other1.z * other2.elements[2];
+      let d = a + b + c; // Modify this line to calculate this vector's magnitude.
+
+      // Don't delete the return statement.
+      return d;
+  }
+
     /**
       * Calcualte the cross product between this vector and other.
       * @return new vector
       */
-    static cross(other1, other2) {
+    static cross(out, a, b) {
         // Insert your code here.
         // This function should create and return a new vector.
-        let v3 = new Vector3(); // Modify this line to calculate cross product between other1 and other2.
-        v3.elements[0] = other1.elements[1] * other2.elements[2] - other1.elements[2] * other2.elements[1];
-        v3.elements[1] = other1.elements[2] * other2.elements[0] - other1.elements[0] * other2.elements[2];
-        v3.elements[2] = other1.elements[0] * other2.elements[1] - other1.elements[1] * other2.elements[0];
+        //console.log("enter");
+        //console.log(a);
+        const aElements = a.elements;
+        const bElements = b.elements;
+        //console.log(bElements);
+        //const outElements = out.elements;
+
+        out.setX(aElements[1]*bElements[2] - aElements[2]*bElements[1]);
+        out.setY(aElements[2]*bElements[0] - aElements[0]*bElements[2]);
+        out.setZ(aElements[0]*bElements[1] - aElements[1]*bElements[0]);
+
+        //let v3 = new Vector3(); // Modify this line to calculate cross product between other1 and other2.
+        //v3.elements[0] = other1.elements[1] * other2.elements[2] - other1.elements[2] * other2.elements[1];
+        //v3.elements[1] = other1.elements[2] * other2.elements[0] - other1.elements[0] * other2.elements[2];
+        //v3.elements[2] = other1.elements[0] * other2.elements[1] - other1.elements[1] * other2.elements[0];
         // Don't delete the return statement.
-        return v3;
+        //return v3;
+        return out;
     }
 
     /**
